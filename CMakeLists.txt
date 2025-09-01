@@ -34,10 +34,10 @@ add_executable(${PROJECT_NAME} ${EXTERNAL_SOURCES} ${SOURCES} ${HEADERS})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
 	src
-	glfw/include
-	glad/include
-	imgui
-	imgui/backends
+	dep/glfw/include
+	dep/glad/include
+	dep/imgui
+	dep/imgui/backends
 )
 
 add_subdirectory(dep/glfw)

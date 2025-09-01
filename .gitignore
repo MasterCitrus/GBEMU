@@ -24,3 +24,7 @@ bin/
 */Release/*.exe
 */Release/*.dll
 */Release/*.exp
+
+## External Emulator Files
+bootroms/
+roms/

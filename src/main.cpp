@@ -4,8 +4,10 @@ int main()
 {
 	CPU Cpu;
 
-	while (1)
+	int retVal = 1;
+
+	while (retVal == 1)
 	{
-		Cpu.Step();
+		retVal = Cpu.Step();
 	}
 }

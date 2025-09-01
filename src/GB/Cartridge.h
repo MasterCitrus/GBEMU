@@ -2,5 +2,9 @@
 
 class Cartridge
 {
+public:
+
+
+private:
 
 };
