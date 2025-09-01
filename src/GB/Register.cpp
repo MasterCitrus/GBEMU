@@ -1,0 +1,6 @@
+#include "Register.h"
+
+Registers::Registers()
+	: AF(0x0), BC(0x0), DE(0x0), HL(0x0), SP(0x0), PC(0x0)
+{
+}

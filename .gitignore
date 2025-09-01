@@ -1,0 +1,26 @@
+## VS Files
+/.vs
+*.sln
+*.vcxproj
+*.filters
+*.user
+
+## CMake Generated Files
+CMakeFiles/
+*.cmake
+CMakeCache.txt
+GBEMU.dir/
+
+## Build Files
+x64/
+bin/
+*/Debug/*.lib
+*/Debug/*.pdb
+*/Debug/*.exe
+*/Debug/*.dll
+*/Debug/*.exp
+*/Release/*.lib
+*/Release/*.pdb
+*/Release/*.exe
+*/Release/*.dll
+*/Release/*.exp
