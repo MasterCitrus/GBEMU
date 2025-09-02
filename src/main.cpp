@@ -1,13 +1,12 @@
-#include "GB/CPU.h"
+#include "GB/GameBoy.h"
 
 int main()
 {
-	CPU Cpu;
+	GameBoy gb;
 
-	int retVal = 1;
+	gb.Initialise("bootroms/dmg_boot.bin");
 
-	while (retVal == 1)
-	{
-		retVal = Cpu.Step();
-	}
+	gb.LoadGame("roms/tetris.gb");
+
+	gb.Run();
 }

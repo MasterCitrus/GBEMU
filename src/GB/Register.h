@@ -2,6 +2,14 @@
 
 #include "Types.h"
 
+enum Flags : u8
+{
+	ZERO = 1 << 7,
+	SUBTRACT = 1 << 6,
+	HALFCARRY = 1 << 5,
+	CARRY = 1 << 4
+};
+
 struct Registers
 {
 	Registers();
@@ -66,8 +74,13 @@ struct Registers
 		};
 	};
 
-	// Stack Pointer
-	u16 SP;
-	// Program Counter
-	u16 PC;
+	bool GetZeroFlag();
+	bool GetSubtractFlag();
+	bool GetHalfCarryFlag();
+	bool GetCarryFlag();
+
+	void SetZeroFlag(bool value);
+	void SetSubtractFlag(bool value);
+	void SetHalfCarryFlag(bool value);
+	void SetCarryFlag(bool value);
 };

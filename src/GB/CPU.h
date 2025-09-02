@@ -2,15 +2,30 @@
 
 #include "Register.h"
 
+class Memory;
+
 class CPU
 {
 public:
-	CPU();
+	CPU(Memory* memory);
+
+	u8 FetchByte();
+	u16 FetchWord();
+
+	int Decode();
+	int DecodeExtended(u8 opcode);
+
+	void Reset();
 
 	int Step();
-	int PrefixStep(u16 programCode);
 
 private:
-	u8 memory[0xFFFF] = {0};
 	Registers registers;
+	Memory* memory;
+	int cycles = 0;
+	u16 SP = 0x0;
+	u16 PC = 0x0;
+	u8 OP;
+	bool ime = false;;
+	bool halted = false;
 };
