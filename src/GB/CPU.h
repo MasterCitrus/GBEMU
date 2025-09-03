@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Register.h"
+#include <fstream>
 
 class Memory;
 
@@ -8,6 +9,7 @@ class CPU
 {
 public:
 	CPU(Memory* memory);
+	~CPU();
 
 	u8 FetchByte();
 	u16 FetchWord();
@@ -15,11 +17,16 @@ public:
 	int Decode();
 	int DecodeExtended();
 
+	void PushStack();
+	void PopStack();
+
 	void Reset();
 
 	int Step();
 
 private:
+	std::ofstream outputLog;
+	std::ofstream outputRegisters;
 	Registers registers;
 	Memory* memory;
 	int cycles = 0;

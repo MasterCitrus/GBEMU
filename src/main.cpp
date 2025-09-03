@@ -4,9 +4,11 @@ int main()
 {
 	GameBoy gb;
 
-	gb.Initialise("bootroms/dmg_boot.bin");
-
-	gb.LoadGame("roms/tetris.gb");
-
-	gb.Run();
+	if (gb.Initialise("bootroms/dmg_boot.bin"))
+	{
+		if (gb.LoadGame("roms/tetris.gb"))
+		{
+			gb.Run();
+		}
+	}
 }

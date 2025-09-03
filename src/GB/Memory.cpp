@@ -137,6 +137,8 @@ bool Memory::LoadBootRom(const std::string& bootRomPath)
 void Memory::SetCart(Cartridge* cart)
 {
     this->cart = cart;
+
+    std::printf("%s", cart->GetTitle());
 }
 
 constexpr MemoryArea Memory::GetMemoryArea(const u16 address) const

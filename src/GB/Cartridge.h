@@ -17,6 +17,8 @@ public:
 	u8 ReadRAM(u16 address) const;
 	void WriteRAM(u16 address, u8 value);
 
+	std::string GetTitle() const { return cartTitle; }
+
 private:
 	std::vector<u8> rom;
 	std::vector<u8> ram;

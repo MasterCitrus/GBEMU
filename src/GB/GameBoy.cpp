@@ -15,6 +15,8 @@ GameBoy::GameBoy()
 	gpu = std::make_unique<GPU>();
 	input = std::make_unique<Input>();
 	cart = std::make_unique<Cartridge>();
+
+	memory->SetCart(cart.get());
 }
 
 GameBoy::~GameBoy()
