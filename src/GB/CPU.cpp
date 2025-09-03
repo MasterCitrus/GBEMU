@@ -33,7 +33,7 @@ int CPU::Decode()
 {
 	std::string opcode = std::format("{:#04X}", OP);
 	std::string program = std::format("{:#04X}", PC);
-	outputLog << "[Instruction] OP: " << opcode << " | PC: " << program << "\n";
+	
 
 	int cycleAmount =0;
 
@@ -123,6 +123,7 @@ int CPU::Decode()
 				cycleAmount = 12;
 				break;
 			}
+			//PC++;
 			cycleAmount = 8;
 			break;
 		}
@@ -135,6 +136,9 @@ int CPU::Decode()
 			memory->Write(registers.HL, registers.A);
 			registers.HL++;
 			cycleAmount = 8;
+			break;
+		case 0x26:
+			registers.H = FetchByte();
 			break;
 		case 0x31:
 			//std::printf("LD SP, d16 | 0x%02x at 0x%04x\n\n\n", OP, PC);
@@ -213,6 +217,14 @@ int CPU::Decode()
 			break;
 	}
 
+	outputLog << "[Instruction] OP: " << opcode << " | PC: " << program << "\n";
+	outputRegisters << "[Registers] - OP " << std::format("{:#02X}", OP) << " | Address: " << std::format("{:#04X}", PC)
+		<< "\nAF: " << std::format("{:#04X}", registers.AF) << "\nA: " << std::format("{:#04X}", registers.A) << "\nF: " << std::format("{:#04X}", registers.F)
+		<< "\nBC: " << std::format("{:#04X}", registers.BC) << "\nB: " << std::format("{:#04X}", registers.B) << "\nC: " << std::format("{:#04X}", registers.C)
+		<< "\nDE: " << std::format("{:#04X}", registers.DE) << "\nD: " << std::format("{:#04X}", registers.D) << "\nE: " << std::format("{:#04X}", registers.E)
+		<< "\nHL: " << std::format("{:#04X}", registers.HL) << "\nH: " << std::format("{:#04X}", registers.H) << "\nL: " << std::format("{:#04X}", registers.L)
+		<< "\nPC: " << std::format("{:#04X}", PC) << "\nSP: " << std::format("{:#04X}", SP) << "\n\n";
+
 	return cycleAmount;
 }
 
@@ -220,8 +232,8 @@ int CPU::DecodeExtended()
 {
 	u8 opcode = FetchByte();
 
-	std::string prefix = std::format("{:x}", opcode);
-	std::string program = std::format("{:x}", PC);
+	std::string prefix = std::format("{:#04X}", opcode);
+	std::string program = std::format("{:#04X}", PC);
 	outputLog << "[Prefix Instruction] OP: " << prefix << " | PC: " << program << "\n";
 
 	int cycleAmount = 0;
@@ -294,13 +306,6 @@ void CPU::Reset()
 
 int CPU::Step()
 {
-	outputRegisters << "[Registers] - OP " << std::format("{:#02X}", OP) << " | Address: " << std::format("{:#04X}", PC)
-		<< "\nAF: " << std::format("{:#04X}", registers.AF) << "\nA: " << std::format("{:#04X}", registers.A) << "\nF: " << std::format("{:#04X}", registers.F)
-		<< "\nBC: " << std::format("{:#04X}", registers.BC) << "\nB: " << std::format("{:#04X}", registers.B) << "\nC: " << std::format("{:#04X}", registers.C)
-		<< "\nDE: " << std::format("{:#04X}", registers.DE) << "\nD: " << std::format("{:#04X}", registers.D) << "\nE: " << std::format("{:#04X}", registers.E)
-		<< "\nHL: " << std::format("{:#04X}", registers.HL) << "\nH: " << std::format("{:#04X}", registers.H) << "\nL: " << std::format("{:#04X}", registers.L)
-		<< "\nPC: " << std::format("{:#04X}", PC) << "\nSP: " << std::format("{:#04X}", SP) << "\n\n";
-
 	if (halted) return 4;
 
 	OP = FetchByte();

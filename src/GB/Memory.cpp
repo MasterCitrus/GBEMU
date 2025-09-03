@@ -137,8 +137,6 @@ bool Memory::LoadBootRom(const std::string& bootRomPath)
 void Memory::SetCart(Cartridge* cart)
 {
     this->cart = cart;
-
-    std::printf("%s", cart->GetTitle());
 }
 
 constexpr MemoryArea Memory::GetMemoryArea(const u16 address) const
@@ -147,7 +145,7 @@ constexpr MemoryArea Memory::GetMemoryArea(const u16 address) const
     {
         return MemoryArea::BOOTROM;
     }
-    else if (address < 0x8000 && !bootRomEnabled)
+    else if (address < 0x8000)
     {
         return MemoryArea::ROM;
     }
