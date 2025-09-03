@@ -49,9 +49,10 @@ int CPU::Decode()
 			registers.SetCarryFlag(false);
 			return 4;
 		case 0xCB:
+		{
 			std::printf("PREFIX | 0x%02x at 0x%04x\n\n\n", OP, PC);
-			u8 opcode = FetchByte();
-			return 4 + DecodeExtended(opcode);
+			return 4 + DecodeExtended();
+		}
 		default:
 			std::printf("Unsupported Instruction : 0x%02x at 0x%04x\n\n\n", OP, PC);
 			std::exit(EXIT_FAILURE);
@@ -59,9 +60,20 @@ int CPU::Decode()
 	}
 }
 
-int CPU::DecodeExtended(u8 opcode)
+int CPU::DecodeExtended()
 {
-	return 0;
+	u8 opcode = FetchByte();
+
+	switch (opcode)
+	{
+		case 0xCB:
+			registers.E = registers.E | 1 << 1;
+			return 8;
+		default:
+			std::printf("Unsupported Prefix Instruction : 0x%02x at 0x%04x\n\n\n", OP, PC);
+			std::exit(EXIT_FAILURE);
+			return 8;
+	}
 }
 
 void CPU::Reset()

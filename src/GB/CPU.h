@@ -13,7 +13,7 @@ public:
 	u16 FetchWord();
 
 	int Decode();
-	int DecodeExtended(u8 opcode);
+	int DecodeExtended();
 
 	void Reset();
 
