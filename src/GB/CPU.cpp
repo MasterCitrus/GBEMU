@@ -216,9 +216,9 @@ int CPU::Decode()
 			outputFlow << " | CALL a16\n";
 			u16 address = FetchWord();
 			u8 low = PC & 0xFF;
-			u8 high = (PC >> 8) & 0xFF;
-			memory->Write(SP--, high);
-			memory->Write(SP--, low);
+			u8 high = PC >> 8;
+			memory->Write(--SP, high);
+			memory->Write(--SP, low);
 			PC = address;
 			cycleAmount = 24;
 			break;
@@ -244,7 +244,7 @@ int CPU::Decode()
 	}
 
 	outputLog << "[Instruction] OP: " << opcode << " | PC: " << program << "\n";
-	outputFlow << "[Registers] - OP " << std::format("{:#02X}", OP) << " | Address: " << std::format("{:#04X}", PC)
+	outputFlow << "[Registers] - OP "
 		<< "\nAF: " << std::format("{:#04X}", registers.AF) << "\nA: " << std::format("{:#04X}", registers.A) << "\nF: " << std::format("{:#04X}", registers.F)
 		<< "\nBC: " << std::format("{:#04X}", registers.BC) << "\nB: " << std::format("{:#04X}", registers.B) << "\nC: " << std::format("{:#04X}", registers.C)
 		<< "\nDE: " << std::format("{:#04X}", registers.DE) << "\nD: " << std::format("{:#04X}", registers.D) << "\nE: " << std::format("{:#04X}", registers.E)
@@ -272,7 +272,7 @@ int CPU::DecodeExtended()
 		{
 			outputFlow << " | RL C\n";
 			bool carry = registers.GetCarryFlag();
-			bool newCarry = (registers.C >> 0) & (u8)1;
+			bool newCarry = ((registers.C >> 0) & (u8)1) ? 1 : 0;
 			registers.SetCarryFlag(newCarry);
 			registers.C = (registers.C << 1) | carry;
 			if (registers.C == 0)
