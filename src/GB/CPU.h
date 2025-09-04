@@ -27,6 +27,7 @@ public:
 private:
 	std::ofstream outputLog;
 	std::ofstream outputRegisters;
+	std::ofstream outputFlow;
 	Registers registers;
 	Memory* memory;
 	int cycles = 0;

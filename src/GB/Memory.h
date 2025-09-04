@@ -2,6 +2,7 @@
 
 #include "Types.h"
 
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -27,6 +28,7 @@ class Memory
 {
 public:
 	Memory();
+	~Memory();
 
 	u8 Read(u16 address) const;
 	void Write(u16 address, u8 value);
@@ -45,6 +47,7 @@ private:
 	std::vector<u8> workRam;
 	std::vector<u8> highRam;
 	std::vector<u8> ioRegisters;
+	std::ofstream output;
 	Cartridge* cart;
 	bool bootRomEnabled;
 };

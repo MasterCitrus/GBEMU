@@ -28,5 +28,7 @@ bin/
 ## External Emulator Files
 bootroms/
 roms/
-registers.txt
-log.txt
+logging/registers.txt
+logging/log.txt
+logging/bootrom.txt
+logging/flow.txt

@@ -1,9 +1,14 @@
 #include "Memory.h"
 #include "Cartridge.h"
-#include <fstream>
+#include <format>
 
 Memory::Memory()
     : workRam(0x8000, 0), highRam(0x7F, 0), ioRegisters(0x80, 0), cart(nullptr), bootRomEnabled(true)
+{
+    
+}
+
+Memory::~Memory()
 {
     
 }
@@ -130,6 +135,13 @@ bool Memory::LoadBootRom(const std::string& bootRomPath)
     boot.seekg(0, std::ios::beg);
 
     boot.read(reinterpret_cast<char*>(bootRom.data()), size);
+
+    output.open("logging/bootrom.txt");
+    for (int i = 0; i < 256; i++)
+    {
+        output << "Position: " << std::format("{:#04X}", i) << " | Byte: " << std::format("{:#04X}", bootRom[i]) << "\n";
+    }
+    output.close();
 
     return true;
 }
