@@ -35,7 +35,7 @@ u8 GPU::ReadVRAM(u16 address)
 
 void GPU::WriteVRAM(u16 address, u8 value)
 {
-	vram[address - 8000] = value;
+	vram[address - 0x8000] = value;
 }
 
 u8 GPU::ReadOAM(u16 address)
@@ -71,7 +71,6 @@ u8 GPU::ReadRegister(u16 address)
 			return lyc;
 			break;
 		case 0xFF46:
-
 			break;
 		case 0xFF47:
 			return bgp;
@@ -108,13 +107,11 @@ void GPU::SetRegister(u16 address, u8 value)
 			scx = value;
 			break;
 		case 0xFF44:
-			ly = value;
 			break;
 		case 0xFF45:
 			lyc = value;
 			break;
 		case 0xFF46:
-			
 			break;
 		case 0xFF47:
 			bgp = value;

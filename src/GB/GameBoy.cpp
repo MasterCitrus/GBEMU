@@ -12,7 +12,7 @@ GameBoy::GameBoy()
 	memory = std::make_unique<Memory>();
 	cpu = std::make_unique<CPU>(memory.get());
 	apu = std::make_unique<APU>();
-	gpu = std::make_unique<GPU>(memory.get());
+	gpu = std::make_unique<GPU>();
 	input = std::make_unique<Input>();
 	cart = std::make_unique<Cartridge>();
 
@@ -54,6 +54,7 @@ void GameBoy::Run()
 	while (running)
 	{
 		int cycles = cpu->Step();
+		gpu->Step(cycles);
 
 		totalCycles += cycles;
 	}

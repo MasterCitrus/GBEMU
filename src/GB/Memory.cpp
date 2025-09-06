@@ -52,14 +52,6 @@ u8 Memory::Read(u16 address) const
     }
     else if (currentMemoryArea == MemoryArea::IO_REGISTERS)
     {
-        return ioRegisters[address - 0xFF00];
-    }
-    else if (currentMemoryArea == MemoryArea::HIGH_RAM)
-    {
-        return highRam[address - 0xFF80];
-    }
-    else if (currentMemoryArea == MemoryArea::INTERRUPT_ENABLE_REGISTER)
-    {
         // Joypad Input
         if (address == 0xFF00)
         {
@@ -101,7 +93,7 @@ u8 Memory::Read(u16 address) const
 
         }
         // Boot Rom Mapping Control
-        if(address == 0xFF50)
+        if (address == 0xFF50)
         {
 
         }
@@ -120,7 +112,14 @@ u8 Memory::Read(u16 address) const
         {
 
         }
-        //return ioRegisters[0x7F];
+    }
+    else if (currentMemoryArea == MemoryArea::HIGH_RAM)
+    {
+        return highRam[address - 0xFF80];
+    }
+    else if (currentMemoryArea == MemoryArea::INTERRUPT_ENABLE_REGISTER)
+    {
+        return ioRegisters[0x7F];
     }
 
     return 0xFF;
