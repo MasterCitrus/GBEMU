@@ -1,5 +1,6 @@
 #include "Memory.h"
 #include "Cartridge.h"
+#include "GPU.h"
 #include <format>
 
 Memory::Memory()
@@ -27,7 +28,7 @@ u8 Memory::Read(u16 address) const
     }
     else if (currentMemoryArea == MemoryArea::VIDEO_RAM)
     {
-        return 0xFF;
+        return gpu ? gpu->ReadVRAM(address) : 0xFF;
     }
     else if (currentMemoryArea == MemoryArea::EXTERNAL_RAM)
     {
@@ -43,7 +44,7 @@ u8 Memory::Read(u16 address) const
     }
     else if (currentMemoryArea == MemoryArea::OAM)
     {
-        return 0xFF;
+        return gpu ? gpu->ReadOAM(address) : 0xFF;
     }
     else if (currentMemoryArea == MemoryArea::PROHIBITIED)
     {
@@ -59,7 +60,67 @@ u8 Memory::Read(u16 address) const
     }
     else if (currentMemoryArea == MemoryArea::INTERRUPT_ENABLE_REGISTER)
     {
-        return ioRegisters[0x7F];
+        // Joypad Input
+        if (address == 0xFF00)
+        {
+
+        }
+        // Serial Transfer
+        else if (address > 0xFF00 && address <= 0xFF02)
+        {
+
+        }
+        // Timer and Divider
+        else if (address > 0xFF03 && address <= 0xFF07)
+        {
+
+        }
+        // Interrupts
+        else if (address == 0xFF0F)
+        {
+
+        }
+        // Audio
+        else if (address > 0xFF0F && address <= 0xFF26)
+        {
+
+        }
+        // Wave Pattern
+        else if (address > 0xFF2F && address <= 0xFF3F)
+        {
+
+        }
+        // GPU Registers
+        else if (address > 0xFF3F && address <= 0xFF4B)
+        {
+            return gpu->ReadRegister(address);
+        }
+        // VRAM Bank Select
+        else if (address == 0xFF4F)
+        {
+
+        }
+        // Boot Rom Mapping Control
+        if(address == 0xFF50)
+        {
+
+        }
+        // VRAM DMA
+        else if (address > 0xFF50 && address <= 0xFF55)
+        {
+
+        }
+        // BG / OBJ Palettes
+        else if (address > 0xFF67 && address <= 0xFF6B)
+        {
+
+        }
+        // WRAM Bank Select
+        else if (address == 0xFF70)
+        {
+
+        }
+        //return ioRegisters[0x7F];
     }
 
     return 0xFF;
@@ -78,7 +139,10 @@ void Memory::Write(u16 address, u8 value)
     }
     else if (currentMemoryArea == MemoryArea::VIDEO_RAM)
     {
-        return;
+        if (gpu)
+        {
+            gpu->WriteVRAM(address, value);
+        }
     }
     else if (currentMemoryArea == MemoryArea::EXTERNAL_RAM)
     {
@@ -97,7 +161,10 @@ void Memory::Write(u16 address, u8 value)
     }
     else if (currentMemoryArea == MemoryArea::OAM)
     {
-        return;
+        if(gpu)
+        {
+            gpu->WriteOAM(address, value);
+        }
     }
     else if (currentMemoryArea == MemoryArea::PROHIBITIED)
     {
@@ -107,9 +174,65 @@ void Memory::Write(u16 address, u8 value)
     {
         ioRegisters[address - 0xFF00] = value;
 
-        if (address == 0xFF50 && value != 0)
+        // Joypad Input
+        if (address == 0xFF00)
+        {
+
+        }
+        // Serial Transfer
+        else if (address > 0xFF00 && address <= 0xFF02)
+        {
+
+        }
+        // Timer and Divider
+        else if (address > 0xFF03 && address <= 0xFF07)
+        {
+
+        }
+        // Interrupts
+        else if (address == 0xFF0F)
+        {
+
+        }
+        // Audio
+        else if (address > 0xFF0F && address <= 0xFF26)
+        {
+
+        }
+        // Wave Pattern
+        else if (address > 0xFF2F && address <= 0xFF3F)
+        {
+
+        }
+        // GPU Registers
+        else if (address > 0xFF3F && address <= 0xFF4B)
+        {
+            gpu->SetRegister(address, value);
+        }
+        // VRAM Bank Select
+        else if (address == 0xFF4F)
+        {
+
+        }
+        // Boot Rom Mapping Control
+        if (address == 0xFF50)
         {
             DisableBootRom();
+        }
+        // VRAM DMA
+        else if (address > 0xFF50 && address <= 0xFF55)
+        {
+
+        }
+        // BG / OBJ Palettes
+        else if (address > 0xFF67 && address <= 0xFF6B)
+        {
+
+        }
+        // WRAM Bank Select
+        else if (address == 0xFF70)
+        {
+
         }
     }
     else if (currentMemoryArea == MemoryArea::HIGH_RAM)
@@ -149,6 +272,11 @@ bool Memory::LoadBootRom(const std::string& bootRomPath)
 void Memory::SetCart(Cartridge* cart)
 {
     this->cart = cart;
+}
+
+void Memory::SetGpu(GPU* gpu)
+{
+    this->gpu = gpu;
 }
 
 constexpr MemoryArea Memory::GetMemoryArea(const u16 address) const

@@ -23,6 +23,7 @@ enum class MemoryArea
 };
 
 class Cartridge;
+class GPU;
 
 class Memory
 {
@@ -35,9 +36,10 @@ public:
 
 	bool LoadBootRom(const std::string& bootRomPath);
 	void SetCart(Cartridge* cart);
+	void SetGpu(GPU* gpu);
 
 	void DisableBootRom() { bootRomEnabled = false; }
-	bool BootRomEnabled() { return bootRomEnabled; }
+	bool BootRomEnabled() const { return bootRomEnabled; }
 
 private:
 	constexpr MemoryArea GetMemoryArea(const u16 address) const;
@@ -49,5 +51,6 @@ private:
 	std::vector<u8> ioRegisters;
 	std::ofstream output;
 	Cartridge* cart;
+	GPU* gpu;
 	bool bootRomEnabled;
 };

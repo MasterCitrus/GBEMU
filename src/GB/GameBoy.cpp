@@ -12,11 +12,12 @@ GameBoy::GameBoy()
 	memory = std::make_unique<Memory>();
 	cpu = std::make_unique<CPU>(memory.get());
 	apu = std::make_unique<APU>();
-	gpu = std::make_unique<GPU>();
+	gpu = std::make_unique<GPU>(memory.get());
 	input = std::make_unique<Input>();
 	cart = std::make_unique<Cartridge>();
 
 	memory->SetCart(cart.get());
+	memory->SetGpu(gpu.get());
 }
 
 GameBoy::~GameBoy()

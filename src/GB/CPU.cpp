@@ -39,12 +39,34 @@ int CPU::Decode()
 	std::string program = std::format("{:#04X}", PC);
 	
 
-	int cycleAmount =0;
+	int cycleAmount = 0;
 
 	switch (OP)
 	{
 		case 0x00:
 			outputFlow << " | NOP\n";
+			cycleAmount = 4;
+			break;
+		case 0x04:
+			outputFlow << " | INC B\n";
+			if (((registers.B & 0x0F) + 1) > 0x0F)
+			{
+				registers.SetHalfCarryFlag(true);
+			}
+			else
+			{
+				registers.SetHalfCarryFlag(false);
+			}
+			if ((registers.B + 1) == 0)
+			{
+				registers.SetZeroFlag(true);
+			}
+			else
+			{
+				registers.SetZeroFlag(false);
+			}
+			registers.SetSubtractFlag(false);
+			registers.B++;
 			cycleAmount = 4;
 			break;
 		case 0x05:
@@ -89,6 +111,21 @@ int CPU::Decode()
 			registers.C++;
 			cycleAmount = 4;
 			break;
+		case 0x0D:
+			outputFlow << " | DEC C\n";
+			if (((registers.C & 0x0F) < (1 & 0x0F)))
+			{
+				registers.SetHalfCarryFlag(true);
+			}
+			else
+			{
+				registers.SetHalfCarryFlag(false);
+			}
+			registers.SetZeroFlag((registers.C - 1) == 0);
+			registers.SetSubtractFlag(true);
+			registers.C--;
+			cycleAmount = 4;
+			break;
 		case 0x0E:
 			outputFlow << " | LD C, d8\n";
 			registers.C = FetchByte();
@@ -104,6 +141,11 @@ int CPU::Decode()
 			registers.DE++;
 			cycleAmount = 8;
 			break;
+		case 0x16:
+			outputFlow << " | LD D, d8\n";
+			registers.D = FetchByte();
+			cycleAmount = 8;
+			break;
 		case 0x17:
 		{
 			outputFlow << " | RLA\n";
@@ -113,13 +155,26 @@ int CPU::Decode()
 			registers.A = (registers.A << 1) | carry;
 			registers.SetHalfCarryFlag(false);
 			registers.SetSubtractFlag(false);
-			//registers.SetZeroFlag(false);
+			registers.SetZeroFlag(false);
 			cycleAmount = 4;
+			break;
+		}
+		case 0x18:
+		{
+			outputFlow << " | JP s8\n";
+			s8 offset = FetchByte();
+			PC += offset;
+			cycleAmount = 12;
 			break;
 		}
 		case 0x1A:
 			outputFlow << " | LD A, (DE)\n";
 			registers.A = memory->Read(registers.DE);
+			cycleAmount = 8;
+			break;
+		case 0x1E:
+			outputFlow << " | LD E, d8\n";
+			registers.E = FetchByte();
 			cycleAmount = 8;
 			break;
 		case 0x20:
@@ -147,9 +202,112 @@ int CPU::Decode()
 			registers.HL++;
 			cycleAmount = 8;
 			break;
+		case 0x23:
+			outputFlow << " | INC HL\n";
+			registers.HL++;
+			cycleAmount = 8;
+			break;
+		case 0x24:
+			outputFlow << " | INC H\n";
+			if (((registers.H & 0x0F) + 1) > 0x0F)
+			{
+				registers.SetHalfCarryFlag(true);
+			}
+			else
+			{
+				registers.SetHalfCarryFlag(false);
+			}
+			if ((registers.H + 1) == 0)
+			{
+				registers.SetZeroFlag(true);
+			}
+			else
+			{
+				registers.SetZeroFlag(false);
+			}
+			registers.SetSubtractFlag(false);
+			registers.H++;
+			cycleAmount = 4;
+			break;
+		case 0x25:
+			outputFlow << " | DEC H\n";
+			if (((registers.H & 0x0F) < (1 & 0x0F)))
+			{
+				registers.SetHalfCarryFlag(true);
+			}
+			else
+			{
+				registers.SetHalfCarryFlag(false);
+			}
+			registers.SetZeroFlag((registers.H - 1) == 0);
+			registers.SetSubtractFlag(true);
+			registers.H--;
+			cycleAmount = 4;
+			break;
 		case 0x26:
 			outputFlow << " | LD H, d8\n";
 			registers.H = FetchByte();
+			cycleAmount = 8;
+			break;
+		case 0x28:
+		{
+			outputFlow << " | JP Z, s8\n";
+			s8 offset = static_cast<s8>(FetchByte());
+			if (registers.GetZeroFlag())
+			{
+				PC += offset;
+				cycleAmount = 12;
+				break;
+			}
+			cycleAmount = 8;
+			break;
+		}
+		case 0x2B:
+			outputFlow << " | DEC HL\n";
+			registers.HL--;
+			cycleAmount = 8;
+			break;
+		case 0x2C:
+			outputFlow << " | INC L\n";
+			if (((registers.L & 0x0F) + 1) > 0x0F)
+			{
+				registers.SetHalfCarryFlag(true);
+			}
+			else
+			{
+				registers.SetHalfCarryFlag(false);
+			}
+			if ((registers.L + 1) == 0)
+			{
+				registers.SetZeroFlag(true);
+			}
+			else
+			{
+				registers.SetZeroFlag(false);
+			}
+			registers.SetSubtractFlag(false);
+			registers.L++;
+			cycleAmount = 4;
+			break;
+		case 0x2D:
+			outputFlow << " | DEC L\n";
+			if (((registers.L & 0x0F) < (1 & 0x0F)))
+			{
+				registers.SetHalfCarryFlag(true);
+			}
+			else
+			{
+				registers.SetHalfCarryFlag(false);
+			}
+			registers.SetZeroFlag((registers.L - 1) == 0);
+			registers.SetSubtractFlag(true);
+			registers.L--;
+			cycleAmount = 4;
+			break;
+		case 0x2E:
+			outputFlow << " | LD L, d8\n";
+			registers.L = FetchByte();
+			cycleAmount = 8;
 			break;
 		case 0x31:
 			outputFlow << " | LD SP, d16\n";
@@ -162,6 +320,88 @@ int CPU::Decode()
 			registers.HL--;
 			cycleAmount = 8;
 			break;
+		case 0x34:
+		{
+			outputFlow << " | INC (HL)\n";
+			u8 value = memory->Read(registers.HL);
+			if (((value & 0x0F) + 1) > 0x0F)
+			{
+				registers.SetHalfCarryFlag(true);
+			}
+			else
+			{
+				registers.SetHalfCarryFlag(false);
+			}
+			if ((value + 1) == 0)
+			{
+				registers.SetZeroFlag(true);
+			}
+			else
+			{
+				registers.SetZeroFlag(false);
+			}
+			registers.SetSubtractFlag(false);
+			value++;
+			memory->Write(registers.HL, value);
+			cycleAmount = 4;
+			break;
+		}
+		case 0x35:
+		{
+			outputFlow << " | DEC (HL)\n";
+			u8 value = memory->Read(registers.HL);
+			if (((value & 0x0F) < (1 & 0x0F)))
+			{
+				registers.SetHalfCarryFlag(true);
+			}
+			else
+			{
+				registers.SetHalfCarryFlag(false);
+			}
+			registers.SetZeroFlag((value - 1) == 0);
+			registers.SetSubtractFlag(true);
+			value--;
+			memory->Write(registers.HL, value);
+			cycleAmount = 4;
+			break;
+		}
+		case 0x3C:
+			outputFlow << " | INC A\n";
+			if (((registers.A & 0x0F) + 1) > 0x0F)
+			{
+				registers.SetHalfCarryFlag(true);
+			}
+			else
+			{
+				registers.SetHalfCarryFlag(false);
+			}
+			if ((registers.A + 1) == 0)
+			{
+				registers.SetZeroFlag(true);
+			}
+			else
+			{
+				registers.SetZeroFlag(false);
+			}
+			registers.SetSubtractFlag(false);
+			registers.A++;
+			cycleAmount = 4;
+			break;
+		case 0x3D:
+			outputFlow << " | DEC A\n";
+			if (((registers.A & 0x0F) < (1 & 0x0F)))
+			{
+				registers.SetHalfCarryFlag(true);
+			}
+			else
+			{
+				registers.SetHalfCarryFlag(false);
+			}
+			registers.SetZeroFlag((registers.A - 1) == 0);
+			registers.SetSubtractFlag(true);
+			registers.A--;
+			cycleAmount = 4;
+			break;
 		case 0x3E:
 			outputFlow << " | LD A, d8\n";
 			registers.A = FetchByte();
@@ -172,10 +412,25 @@ int CPU::Decode()
 			registers.C = registers.A;
 			cycleAmount = 4;
 			break;
+		case 0x57:
+			outputFlow << " | LD D, A\n";
+			registers.D = registers.A;
+			cycleAmount = 8;
+			break;
+		case 0x67:
+			outputFlow << " | LD H, A\n";
+			registers.H = registers.A;
+			cycleAmount = 4;
+			break;
 		case 0x77:
 			outputFlow << " | LD (HL), A\n";
 			memory->Write(registers.HL, registers.A);
 			cycleAmount = 8;
+			break;
+		case 0x7B:
+			outputFlow << " | LD A, E\n";
+			registers.A = registers.E;
+			cycleAmount = 4;
 			break;
 		case 0xAF:
 			outputFlow << " | XOR A\n";
@@ -194,10 +449,19 @@ int CPU::Decode()
 			break;
 		case 0xC5:
 			outputFlow << " | PUSH BC\n";
-			memory->Write(SP--, registers.C);
-			memory->Write(SP--, registers.B);
+			memory->Write(--SP, registers.C);
+			memory->Write(--SP, registers.B);
 			cycleAmount = 24;
 			break;
+		case 0xC9:
+		{
+			outputFlow << " | RET\n";
+			u8 low = memory->Read(SP++);
+			u8 high = memory->Read(SP++);
+			PC = (high << 8) | low;
+			cycleAmount = 16;
+			break;
+		}
 		case 0xCB:
 		{
 			outputFlow << " | PREFIX\n";
@@ -229,8 +493,56 @@ int CPU::Decode()
 			memory->Write(0xFF00 + registers.C, registers.A);
 			cycleAmount = 8;
 			break;
+		case 0xEA:
+		{
+			outputFlow << " | LD a16, A\n";
+			u16 address = FetchWord();
+			memory->Write(address, registers.A);
+			cycleAmount = 16;
+			break;
+		}
+		case 0xF0:
+		{
+			outputFlow << " | LD A, (a8)\n";
+			u8 offset = FetchByte();
+			registers.A = memory->Read(0xFF00 + offset);
+			cycleAmount = 12;
+			break;
+		}
+		case 0xFE:
+		{
+			outputFlow << " | CP d8\n";
+			u8 val = FetchByte();
+			registers.SetSubtractFlag(true);
+			if (registers.A - val == 0)
+			{
+				registers.SetZeroFlag(true);
+			}
+			else
+			{
+				registers.SetZeroFlag(false);
+			}
+			if ((registers.A & 0xF) < (val & 0xF))
+			{
+				registers.SetHalfCarryFlag(true);
+			}
+			else
+			{
+				registers.SetHalfCarryFlag(false);
+			}
+			if (registers.A < val)
+			{
+				registers.SetCarryFlag(true);
+			}
+			else
+			{
+				registers.SetCarryFlag(false);
+			}
+			cycleAmount = 8;
+			break;
+		}
 		default:
-			std::printf("Unsupported Instruction : 0x%02x at 0x%04x\n\n\n", OP, PC);
+			std::printf("Unsupported Instruction : 0x%02x at 0x%04x\n\n\n", OP, PC - 1);
 			std::exit(EXIT_FAILURE);
 			cycleAmount = 4;
 			break;
