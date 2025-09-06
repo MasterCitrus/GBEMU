@@ -49,7 +49,7 @@ int CPU::Decode()
 			break;
 		case 0x05:
 			outputFlow << " | DEC B\n";
-			if (((registers.B & 0x0F) - 1) > 0x0F)
+			if (((registers.B & 0x0F) < (1 & 0x0F)))
 			{
 				registers.SetHalfCarryFlag(true);
 			}
@@ -57,14 +57,7 @@ int CPU::Decode()
 			{
 				registers.SetHalfCarryFlag(false);
 			}
-			if ((registers.B - 1) == 0)
-			{
-				registers.SetZeroFlag(true);
-			}
-			else
-			{
-				registers.SetZeroFlag(false);
-			}
+			registers.SetZeroFlag((registers.B - 1) == 0);
 			registers.SetSubtractFlag(true);
 			registers.B--;
 			cycleAmount = 4;
@@ -115,12 +108,12 @@ int CPU::Decode()
 		{
 			outputFlow << " | RLA\n";
 			bool carry = registers.GetCarryFlag();
-			bool newCarry = (registers.A << 1) & (u8)1;
+			bool newCarry = (registers.A >> 7) & (u8)1;
 			registers.SetCarryFlag(newCarry);
 			registers.A = (registers.A << 1) | carry;
 			registers.SetHalfCarryFlag(false);
 			registers.SetSubtractFlag(false);
-			registers.SetZeroFlag(false);
+			//registers.SetZeroFlag(false);
 			cycleAmount = 4;
 			break;
 		}
@@ -272,17 +265,12 @@ int CPU::DecodeExtended()
 		{
 			outputFlow << " | RL C\n";
 			bool carry = registers.GetCarryFlag();
-			bool newCarry = ((registers.C >> 0) & (u8)1) ? 1 : 0;
+			bool newCarry = ((registers.C >> 7) & (u8)1) ? 1 : 0;
 			registers.SetCarryFlag(newCarry);
 			registers.C = (registers.C << 1) | carry;
-			if (registers.C == 0)
-			{
-				registers.SetZeroFlag(true);
-			}
-			else
-			{
-				registers.SetZeroFlag(false);
-			}
+			registers.SetZeroFlag(registers.C == 0);
+			registers.SetSubtractFlag(false);
+			registers.SetHalfCarryFlag(false);
 			cycleAmount = 8;
 			break;
 		}
