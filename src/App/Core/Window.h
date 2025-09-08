@@ -1,7 +1,9 @@
 #pragma once
+#include "Events/Event.h"
+#include <functional>
 #include <string>
 
-class GLFWwindow;
+struct GLFWwindow;
 
 struct WindowProps
 {
@@ -14,12 +16,33 @@ struct WindowProps
 class Window
 {
 public:
-	Window(const WindowProps props);
+	using EventCallbackFn = std::function<void(Event&)>;
+
+	Window(const WindowProps& props);
 	~Window();
+
+	void Init();
+	void Shutdown();
 
 	void Update();
 
-	bool SetVSync(bool enable);
+	void SetEventCallback(const EventCallbackFn& callback) { data.callback = callback; }
+	void SetVSync(bool enable);
+	void SetWindowTitle(const std::string& title);
+
+	GLFWwindow* GetWindow() { return window; }
 private:
 	GLFWwindow* window;
+
+	struct WindowData
+	{
+		std::string title;
+		unsigned int width;
+		unsigned int height;
+		bool fullscreen;
+		bool vsync;
+		EventCallbackFn callback;
+	};
+
+	WindowData data;
 };

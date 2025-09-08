@@ -22,6 +22,8 @@ public:
 
 	void Run();
 
+	Cartridge* GetCart() { return cart.get(); }
+
 private:
 	std::unique_ptr<Memory> memory;
 	std::unique_ptr<CPU> cpu;
@@ -30,5 +32,6 @@ private:
 	std::unique_ptr<Input> input;
 	std::unique_ptr<Cartridge> cart;
 	
+	int totalCycles = 0;
 	bool running;
 };

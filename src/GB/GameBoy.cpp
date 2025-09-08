@@ -43,15 +43,13 @@ bool GameBoy::LoadGame(const std::string& cartPath)
 		return false;
 	}
 
+	running = true;
 	return true;
 }
 
 void GameBoy::Run()
 {
-	running = true;
-	int totalCycles = 0;
-
-	while (running)
+	if (running)
 	{
 		int cycles = cpu->Step();
 		gpu->Step(cycles);

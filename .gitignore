@@ -10,20 +10,26 @@ CMakeFiles/
 *.cmake
 CMakeCache.txt
 GBEMU.dir/
+glad.dir/
+imgui.dir/
+nfde.dir/
 
 ## Build Files
 x64/
 bin/
-*/Debug/*.lib
-*/Debug/*.pdb
-*/Debug/*.exe
-*/Debug/*.dll
-*/Debug/*.exp
-*/Release/*.lib
-*/Release/*.pdb
-*/Release/*.exe
-*/Release/*.dll
-*/Release/*.exp
+Debug/*.lib
+Debug/*.pdb
+Debug/*.exe
+Debug/*.dll
+Debug/*.exp
+Release/*.lib
+Release/*.pdb
+Release/*.exe
+Release/*.dll
+Release/*.exp
+
+## ImGui
+imgui.ini
 
 ## External Emulator Files
 bootroms/

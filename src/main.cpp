@@ -1,14 +1,11 @@
-#include "GB/GameBoy.h"
+#include "App/EmuApp.h"
 
 int main()
 {
-	GameBoy gb;
-
-	if (gb.Initialise("bootroms/dmg_boot.bin"))
+	EmuApp app;
+	if (!app.Initialise("GameBoy Emulator", 800, 600, false))
 	{
-		if (gb.LoadGame("roms/tetris.gb"))
-		{
-			gb.Run();
-		}
+		return 1;
 	}
+	app.Run();
 }
