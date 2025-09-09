@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Application.h"
+#include "../GB/GameBoy.h"
 
 class GameBoy;
 
@@ -15,5 +16,5 @@ public:
 	virtual void Render() override;
 
 private:
-	GameBoy* gameboy;
+	GameBoy gameboy;
 };

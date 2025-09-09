@@ -258,12 +258,12 @@ bool Memory::LoadBootRom(const std::string& bootRomPath)
 
     boot.read(reinterpret_cast<char*>(bootRom.data()), size);
 
-    output.open("logging/bootrom.txt");
-    for (int i = 0; i < 256; i++)
-    {
-        output << "Position: " << std::format("{:#04X}", i) << " | Byte: " << std::format("{:#04X}", bootRom[i]) << "\n";
-    }
-    output.close();
+    //output.open("logging/bootrom.txt");
+    //for (int i = 0; i < 256; i++)
+    //{
+    //    output << "Position: " << std::format("{:#04X}", i) << " | Byte: " << std::format("{:#04X}", bootRom[i]) << "\n";
+    //}
+    //output.close();
 
     return true;
 }

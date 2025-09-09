@@ -1,5 +1,4 @@
 #include "EmuApp.h"
-#include "../GB/GameBoy.h"
 #include "../GB/Cartridge.h"
 #include "Core/Window.h"
 #include <imgui.h>
@@ -7,9 +6,7 @@
 
 bool EmuApp::Startup()
 {
-    gameboy = new GameBoy;
-
-    if (!gameboy->Initialise("bootroms/dmg_boot.bin"))
+    if (!gameboy.Initialise("bootroms/dmg_boot.bin"))
     {
         return false;
     }
@@ -19,12 +16,12 @@ bool EmuApp::Startup()
 
 void EmuApp::Shutdown()
 {
-    delete gameboy;
+    
 }
 
 void EmuApp::Update(float delta)
 {
-    gameboy->Run();
+    gameboy.Run();
 }
 
 void EmuApp::Render()
@@ -51,8 +48,8 @@ void EmuApp::Render()
                 if (result == NFD_OKAY)
                 {
                     filePath = path.get();
-                    gameboy->LoadGame(filePath);
-                    GetWindow()->SetWindowTitle(gameboy->GetCart()->GetTitle());
+                    gameboy.LoadGame(filePath);
+                    GetWindow()->SetWindowTitle(gameboy.GetCart()->GetTitle());
                 }
                 else if (result == NFD_CANCEL)
                 {

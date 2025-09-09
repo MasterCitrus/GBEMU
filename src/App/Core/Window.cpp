@@ -170,6 +170,6 @@ void Window::Shutdown()
 
 void Window::Update()
 {
-	glfwPollEvents();
 	glfwSwapBuffers(window);
+	glfwPollEvents();
 }
