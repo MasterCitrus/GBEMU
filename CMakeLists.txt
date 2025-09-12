@@ -55,10 +55,12 @@ target_include_directories(imgui PUBLIC
 
 find_package(OpenGL REQUIRED)
 add_subdirectory(dep/glfw)
+add_subdirectory(dep/sdl)
 
 target_link_libraries(imgui PUBLIC
 	glfw
 	OpenGL::GL
+	SDL3::SDL3
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE

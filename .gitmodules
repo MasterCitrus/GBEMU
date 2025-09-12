@@ -8,3 +8,6 @@
 [submodule "dep/nfde"]
 	path = dep/nfde
 	url = https://github.com/btzy/nativefiledialog-extended
+[submodule "dep/sdl"]
+	path = dep/sdl
+	url = https://github.com/libsdl-org/SDL
