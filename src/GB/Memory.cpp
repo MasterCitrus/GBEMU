@@ -60,7 +60,8 @@ u8 Memory::Read(u16 address) const
         // Serial Transfer
         else if (address > 0xFF00 && address <= 0xFF02)
         {
-
+            if (address == 0xFF01) return ioRegisters[address - 0xFF00];
+            else if (address == 0xFF02) return ioRegisters[address - 0xFF00];
         }
         // Timer and Divider
         else if (address > 0xFF03 && address <= 0xFF07)
@@ -181,7 +182,8 @@ void Memory::Write(u16 address, u8 value)
         // Serial Transfer
         else if (address > 0xFF00 && address <= 0xFF02)
         {
-
+            if (address == 0xFF01) ioRegisters[address - 0xFF00] = value;
+            else if (address == 0xFF02) ioRegisters[address - 0xFF00] = value;
         }
         // Timer and Divider
         else if (address > 0xFF03 && address <= 0xFF07)

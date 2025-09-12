@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <format>
+#include <iostream>
 
 CPU::CPU(Memory* memory)
 	: memory(memory)
@@ -52,6 +53,14 @@ int CPU::Decode()
 			//outputflow << " | NOP\n";
 			cycleAmount = 4;
 			break;
+		case 0x01:
+			registers.BC = FetchWord();
+			cycleAmount = 12;
+			break;
+		case 0x03:
+			registers.BC++;
+			cycleAmount = 8;
+			break;
 		case 0x04:
 			//outputflow << " | INC B\n";
 			if (((registers.B & 0x0F) + 1) > 0x0F)
@@ -76,7 +85,7 @@ int CPU::Decode()
 			break;
 		case 0x05:
 			//outputflow << " | DEC B\n";
-			if (((registers.B & 0x0F) < (1 & 0x0F)))
+			if (((registers.B & 0x0F) == 0x0))
 			{
 				registers.SetHalfCarryFlag(true);
 			}
@@ -118,7 +127,7 @@ int CPU::Decode()
 			break;
 		case 0x0D:
 			//outputflow << " | DEC C\n";
-			if (((registers.C & 0x0F) < (1 & 0x0F)))
+			if (((registers.C & 0x0F) == 0x0))
 			{
 				registers.SetHalfCarryFlag(true);
 			}
@@ -170,7 +179,7 @@ int CPU::Decode()
 			break;
 		case 0x15:
 			//outputflow << " | DEC D\n";
-			if (((registers.D & 0x0F) < (1 & 0x0F)))
+			if (((registers.D & 0x0F) == 0x0))
 			{
 				registers.SetHalfCarryFlag(true);
 			}
@@ -238,7 +247,7 @@ int CPU::Decode()
 			break;
 		case 0x1D:
 			//outputflow << " | DEC E\n";
-			if (((registers.E & 0x0F) < (1 & 0x0F)))
+			if (((registers.E & 0x0F) == 0x0))
 			{
 				registers.SetHalfCarryFlag(true);
 			}
@@ -310,7 +319,7 @@ int CPU::Decode()
 			break;
 		case 0x25:
 			//outputflow << " | DEC H\n";
-			if (((registers.H & 0x0F) < (1 & 0x0F)))
+			if (((registers.H & 0x0F) == 0x0))
 			{
 				registers.SetHalfCarryFlag(true);
 			}
@@ -341,6 +350,11 @@ int CPU::Decode()
 			cycleAmount = 8;
 			break;
 		}
+		case 0x2A:
+			registers.A = memory->Read(registers.HL);
+			registers.HL++;
+			cycleAmount = 8;
+			break;
 		case 0x2B:
 			//outputflow << " | DEC HL\n";
 			registers.HL--;
@@ -370,7 +384,7 @@ int CPU::Decode()
 			break;
 		case 0x2D:
 			//outputflow << " | DEC L\n";
-			if (((registers.L & 0x0F) < (1 & 0x0F)))
+			if (((registers.L & 0x0F) == 0x0))
 			{
 				registers.SetHalfCarryFlag(true);
 			}
@@ -429,7 +443,7 @@ int CPU::Decode()
 		{
 			//outputflow << " | DEC (HL)\n";
 			u8 value = memory->Read(registers.HL);
-			if (((value & 0x0F) < (1 & 0x0F)))
+			if (((value & 0x0F) == 0x0))
 			{
 				registers.SetHalfCarryFlag(true);
 			}
@@ -2103,11 +2117,31 @@ int CPU::Decode()
 			registers.C = memory->Read(SP++);
 			cycleAmount = 12;
 			break;
+		case 0xC3:
+			PC = FetchWord();
+			cycleAmount = 16;
+			break;
+		case 0xC4:
+		{
+			u16 address = FetchWord();
+			if (!registers.GetZeroFlag())
+			{
+				u8 low = PC & 0xFF;
+				u8 high = (PC >> 8) & 0xFF;
+				memory->Write(--SP, high);
+				memory->Write(--SP, low);
+				PC = address;
+				cycleAmount = 24;
+				break;
+			}
+			cycleAmount = 12;
+			break;
+		}
 		case 0xC5:
 			//outputflow << " | PUSH BC\n";
 			memory->Write(--SP, registers.C);
 			memory->Write(--SP, registers.B);
-			cycleAmount = 24;
+			cycleAmount = 16;
 			break;
 		case 0xC9:
 		{
@@ -2144,9 +2178,29 @@ int CPU::Decode()
 			cycleAmount = 12;
 			break;
 		}
+		case 0xE1:
+		{
+			registers.H = memory->Read(SP++);
+			registers.L = memory->Read(SP++);
+			cycleAmount = 16;
+			break;
+		}
 		case 0xE2:
 			//outputflow << " | LD (C), A\n";
 			memory->Write(0xFF00 + registers.C, registers.A);
+			cycleAmount = 8;
+			break;
+		case 0xE5:
+			memory->Write(--SP, registers.L);
+			memory->Write(--SP, registers.H);
+			cycleAmount = 12;
+			break;
+		case 0xE6:
+			registers.A &= FetchByte();
+			registers.SetZeroFlag(registers.A == 0);
+			registers.SetSubtractFlag(false);
+			registers.SetHalfCarryFlag(true);
+			registers.SetCarryFlag(false);
 			cycleAmount = 8;
 			break;
 		case 0xEA:
@@ -2165,6 +2219,24 @@ int CPU::Decode()
 			cycleAmount = 12;
 			break;
 		}
+		case 0xF1:
+			registers.A = memory->Read(SP++);
+			registers.F = memory->Read(SP++);
+			cycleAmount = 16;
+			break;
+		case 0xF3:
+			ime = false;
+			cycleAmount = 4;
+			break;
+		case 0xF5:
+			memory->Write(--SP, registers.F);
+			memory->Write(--SP, registers.A);
+			cycleAmount = 12;
+			break;
+		case 0xFA:
+			registers.A = memory->Read(FetchWord());
+			cycleAmount = 16;
+			break;
 		case 0xFE:
 		{
 			//outputflow << " | CP d8\n";
@@ -2305,6 +2377,13 @@ int CPU::Step()
 	//outputflow << "Instruction: " << std::format("{:#04X}", OP);
 
 	cycles = Decode();
+
+	if (memory->Read(0xFF02) == 0x81)
+	{
+		output += memory->Read(0xFF01);
+		std::cout << output << '\r';
+		memory->Write(0xFF02, 0x0);
+	}
 
 	return cycles;
 }

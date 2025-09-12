@@ -28,9 +28,10 @@ public:
 	CPUStats GetStats() const { return stats; }
 
 private:
-	std::ofstream outputLog;
-	std::ofstream outputRegisters;
-	std::ofstream outputFlow;
+	//std::ofstream outputLog;
+	//std::ofstream outputRegisters;
+	//std::ofstream outputFlow;
+	std::string output;
 	CPUStats stats;
 	Registers registers;
 	Memory* memory;

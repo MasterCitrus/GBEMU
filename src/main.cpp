@@ -3,18 +3,18 @@
 
 int main()
 {
-	//GameBoy gameboy;
-	//gameboy.Initialise("bootroms/dmg_boot.bin");
-	//gameboy.LoadGame("roms/tetris.gb");
+	GameBoy gameboy;
+	gameboy.Initialise("bootroms/dmg_boot.bin");
+	gameboy.LoadGame("roms/cpu_instrs/cpu_instrs.gb");
 
-	//while (1)
-	//{
-	//	gameboy.Run();
-	//}
-	EmuApp app;
-	if (!app.Initialise("GameBoy Emulator", 800, 600, false))
+	while (1)
 	{
-		return 1;
+		gameboy.Run();
 	}
-	app.Run();
+	//EmuApp app;
+	//if (!app.Initialise("GameBoy Emulator", 800, 600, false))
+	//{
+	//	return 1;
+	//}
+	//app.Run();
 }

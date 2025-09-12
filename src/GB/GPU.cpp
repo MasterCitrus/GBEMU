@@ -30,7 +30,7 @@ void GPU::Step(int cycles)
 
 u8 GPU::ReadVRAM(u16 address)
 {
-	return vram[address];
+	return vram[address - 0x8000];
 }
 
 void GPU::WriteVRAM(u16 address, u8 value)
