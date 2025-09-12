@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Register.h"
+#include "Stats.h"
 #include <fstream>
 
 class Memory;
@@ -24,10 +25,13 @@ public:
 
 	int Step();
 
+	CPUStats GetStats() const { return stats; }
+
 private:
 	std::ofstream outputLog;
 	std::ofstream outputRegisters;
 	std::ofstream outputFlow;
+	CPUStats stats;
 	Registers registers;
 	Memory* memory;
 	int cycles = 0;

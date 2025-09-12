@@ -57,3 +57,8 @@ void GameBoy::Run()
 		totalCycles += cycles;
 	}
 }
+
+CPUStats GameBoy::GetCPUStats() const
+{
+	return cpu->GetStats();
+}

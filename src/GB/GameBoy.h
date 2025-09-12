@@ -10,6 +10,8 @@ class Memory;
 class APU;
 class Input;
 
+struct CPUStats;
+
 class GameBoy
 {
 public:
@@ -23,6 +25,8 @@ public:
 	void Run();
 
 	Cartridge* GetCart() { return cart.get(); }
+
+	CPUStats GetCPUStats() const;
 
 private:
 	std::unique_ptr<Memory> memory;

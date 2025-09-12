@@ -1,5 +1,6 @@
 #include "CPU.h"
 #include "Memory.h"
+#include "Stats.h"
 #include <cstdio>
 #include <cstdlib>
 #include <format>
@@ -7,6 +8,10 @@
 CPU::CPU(Memory* memory)
 	: memory(memory)
 {
+	stats.PC = &PC;
+	stats.OP = &OP;
+	stats.registers = &registers;
+	stats.cycles = &cycles;
 	//outputLog.open("logging\\log.txt");
 	//outputRegisters.open("logging\\registers.txt");
 	//outputFlow.open("logging\\flow.txt");
@@ -2299,5 +2304,7 @@ int CPU::Step()
 	OP = FetchByte();
 	//outputflow << "Instruction: " << std::format("{:#04X}", OP);
 
-	return Decode();
+	cycles = Decode();
+
+	return cycles;
 }
