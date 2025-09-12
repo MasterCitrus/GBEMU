@@ -46,6 +46,7 @@ add_library(imgui STATIC
 	dep/imgui/imgui_tables.cpp
 	dep/imgui/imgui_widgets.cpp
 	dep/imgui/backends/imgui_impl_glfw.cpp
+	dep/imgui/backends/imgui_impl_sdl3.cpp
 	dep/imgui/backends/imgui_impl_opengl3.cpp
 )
 target_include_directories(imgui PUBLIC
