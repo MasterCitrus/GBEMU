@@ -48,7 +48,7 @@ void Window::Init()
 	}
 
 	glfwSetWindowUserPointer(window, &data);
-	SetVSync(false);
+	SetVSync(true);
 
 	glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height)
 							  {

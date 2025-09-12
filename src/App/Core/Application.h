@@ -32,6 +32,9 @@ public:
 private:
 	bool OnWindowClose(WindowCloseEvent& e);
 
+protected:
+	unsigned int fps;
+
 private:
 	Window* window;
 	bool running;

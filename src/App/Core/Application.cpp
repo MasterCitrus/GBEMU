@@ -62,6 +62,8 @@ void Application::Run()
 	std::chrono::time_point<std::chrono::high_resolution_clock> currTime;
 
 	double deltaTime = 0;
+	unsigned int frames = 0;
+	double fpsInterval = 0;
 
 	while (running)
 	{
@@ -71,6 +73,15 @@ void Application::Run()
 		prevTime = currTime;
 
 		deltaTime = duration.count() / 1000.0f;
+
+		frames++;
+		fpsInterval += deltaTime;
+		if (fpsInterval >= 1.0f)
+		{
+			fps = frames;
+			frames = 0;
+			fpsInterval = 0;
+		}
 
 		//if (glfwGetWindowAttrib(window->GetWindow(), GLFW_ICONIFIED) != 0) continue;
 
