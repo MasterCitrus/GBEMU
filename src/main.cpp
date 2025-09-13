@@ -5,7 +5,7 @@ int main()
 {
 	GameBoy gameboy;
 	gameboy.Initialise("bootroms/dmg_boot.bin");
-	gameboy.LoadGame("roms/cpu_instrs/cpu_instrs.gb");
+	gameboy.LoadGame("roms/blargg/cpu_instrs/cpu_instrs.gb");
 
 	while (1)
 	{

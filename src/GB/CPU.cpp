@@ -362,7 +362,7 @@ int CPU::Decode()
 			break;
 		case 0x2C:
 			//outputflow << " | INC L\n";
-			if (((registers.L & 0x0F) + 1) > 0x0F)
+			if ((registers.L & 0x0F) + 1 > 0x0F)
 			{
 				registers.SetHalfCarryFlag(true);
 			}
@@ -2375,6 +2375,8 @@ int CPU::Step()
 
 	OP = FetchByte();
 	//outputflow << "Instruction: " << std::format("{:#04X}", OP);
+
+	Interrupt();
 
 	cycles = Decode();
 

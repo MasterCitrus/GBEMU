@@ -18,6 +18,8 @@ public:
 	int Decode();
 	int DecodeExtended();
 
+	void Interrupt();
+
 	void PushStack();
 	void PopStack();
 
